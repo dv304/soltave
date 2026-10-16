@@ -1,0 +1,73 @@
+---
+import PhoneFrame from "./PhoneFrame.astro";
+
+const pillars = [
+  {
+    title: "Diseño centrado en el usuario",
+    text: "Creada a partir de encuestas a personas del sector creativo en Cali: rutinas de unos 6 minutos, mensajes que acompañan sin regañar y un lenguaje cercano, sin términos clínicos.",
+    color: "bg-coral",
+    icon: "M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm-7 9a7 7 0 0 1 14 0",
+  },
+  {
+    title: "Tu cámara, en tiempo real",
+    text: "Con MediaPipe, la app reconoce la forma de tu mano mientras haces el ejercicio y cuenta las repeticiones. Todo se procesa en el teléfono: no se graban ni se envían imágenes.",
+    color: "bg-azul",
+    icon: "M4 8h3l2-3h6l2 3h3v11H4zM12 17a4 4 0 1 0 0-8 4 4 0 0 0 0 8z",
+  },
+  {
+    title: "Una interfaz intuitiva",
+    text: "Cuatro pestañas, guías animadas de cada postura, un recorrido que te enseña la app la primera vez y modo claro u oscuro. Los ejercicios avanzan solos para no tocar la pantalla con la mano adolorida.",
+    color: "bg-violeta",
+    icon: "M4 5h16v10H4zM8 19h8M12 15v4",
+  },
+];
+
+const steps = [
+  { n: "1", title: "Chequeo del día", text: "Marcas tu nivel de dolor y respondes cuatro preguntas. Si algo no va bien, la app te recomienda consultar a un especialista.", color: "text-coral" },
+  { n: "2", title: "Ejercicio guiado", text: "Una mano animada te muestra cada postura y la cámara te acompaña mientras la haces: abrir y cerrar la mano, deslizar el nervio, estirar la muñeca y más.", color: "text-ambar" },
+  { n: "3", title: "Tu progreso", text: "Rachas, logros, calendario e historial con gráficas. Puedes exportar un reporte en PDF para tu fisioterapeuta.", color: "text-verde" },
+];
+---
+
+<section id="como-funciona" class="mx-auto max-w-6xl scroll-mt-20 px-4 py-20 sm:px-6">
+  <div data-reveal class="max-w-2xl">
+    <p class="font-display text-lg font-semibold text-coral">Cómo funciona</p>
+    <h2 class="mt-2 font-display text-4xl font-semibold leading-tight sm:text-5xl">Terapia para tus manos, sin aparatos</h2>
+    <p class="mt-4 text-lg leading-relaxed text-arena">
+      Soltá Ve convierte la cámara de tu celular en una guía personal de rehabilitación y pausas activas para la muñeca.
+    </p>
+  </div>
+
+  <div data-stagger class="mt-12 grid gap-6 md:grid-cols-3">
+    {pillars.map((p) => (
+      <article data-card class="rounded-3xl bg-white p-7 ring-1 ring-linea">
+        <div class={`flex h-12 w-12 items-center justify-center rounded-2xl ${p.color}`}>
+          <svg aria-hidden="true" viewBox="0 0 24 24" class="h-6 w-6 fill-none stroke-white stroke-2 [stroke-linecap:round] [stroke-linejoin:round]"><path d={p.icon} /></svg>
+        </div>
+        <h3 class="mt-5 font-display text-2xl font-semibold">{p.title}</h3>
+        <p class="mt-3 leading-relaxed text-arena">{p.text}</p>
+      </article>
+    ))}
+  </div>
+
+  <!-- Los tres pasos de la rutina, junto a las guías animadas -->
+  <div class="mt-24 grid items-center gap-12 md:grid-cols-2">
+    <ol data-stagger class="space-y-8">
+      {steps.map((s) => (
+        <li class="flex gap-5">
+          <span class={`font-display text-5xl font-bold leading-none ${s.color}`}>{s.n}</span>
+          <div>
+            <h3 class="font-display text-2xl font-semibold">{s.title}</h3>
+            <p class="mt-2 leading-relaxed text-arena">{s.text}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+
+    <div data-stagger class="grid grid-cols-3 gap-3 sm:gap-4">
+      <PhoneFrame src="/img/app/tutorial-pulgar-claro.png" alt="Guía animada del ejercicio Pulgar a cada dedo" class="translate-y-6" />
+      <PhoneFrame src="/img/app/tutorial-nervio-oscuro.png" alt="Guía animada del ejercicio Cuatro posturas para el nervio" />
+      <PhoneFrame src="/img/app/tutorial-muneca-claro.png" alt="Guía animada del ejercicio Estira la muñeca" class="translate-y-6" />
+    </div>
+  </div>
+</section>

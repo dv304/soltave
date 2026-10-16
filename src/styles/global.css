@@ -1,0 +1,43 @@
+@import "tailwindcss";
+
+/* Paleta y tipografía de la marca Soltá Ve (colores del logo + neutros cálidos). */
+@theme {
+  --color-coral: #e05a47;
+  --color-violeta: #907cb8;
+  --color-ambar: #f4c443;
+  --color-verde: #68b072;
+  --color-azul: #5fa8d3;
+  --color-crema: #fff6c3;
+
+  --color-papel: #fbf7f0;
+  --color-tinta: #231c15;
+  --color-cafe: #1b1712;
+  --color-arena: #6b5e50;
+  --color-linea: #ebe2d4;
+
+  --font-display: "Fredoka", ui-rounded, system-ui, sans-serif;
+  --font-sans: "Roboto", system-ui, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-papel font-sans text-tinta antialiased;
+}
+
+/* Lo que se anima al entrar en pantalla empieza oculto, pero solo si hay JavaScript
+   y el usuario no pidió reducir el movimiento. */
+html.js:not(.reduce-motion) [data-reveal],
+html.js:not(.reduce-motion) [data-stagger] > *,
+html.js:not(.reduce-motion) [data-hero],
+html.js:not(.reduce-motion) [data-letter] {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}

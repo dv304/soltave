@@ -1,0 +1,33 @@
+---
+const blocks = [
+  {
+    id: "mision",
+    kicker: "Misión",
+    title: "Cuidar las manos que crean",
+    text: "Promover la salud articular de quienes trabajan con sus manos mediante rutinas breves, accesibles y guiadas por tecnología. Soltá Ve convierte la cámara del celular en un acompañante de ergonomía, pausas activas y prevención de lesiones, para que cuidarse deje de ser una obligación y se vuelva parte natural de la jornada.",
+    accent: "bg-coral",
+    tint: "bg-coral/10",
+  },
+  {
+    id: "vision",
+    kicker: "Visión",
+    title: "La referencia en el cuidado interactivo de manos y muñecas",
+    text: "Ser la herramienta digital líder en Latinoamérica para el cuidado interactivo de las manos y muñecas, reconocida por llevar la rehabilitación a cualquier casa o taller con solo un celular, y por lograr que la prevención de lesiones sea tan habitual en el oficio creativo como afilar un lápiz o guardar un archivo.",
+    accent: "bg-violeta",
+    tint: "bg-violeta/10",
+  },
+];
+---
+
+<section class="mx-auto max-w-6xl px-4 py-20 sm:px-6">
+  <div data-stagger class="grid gap-6 md:grid-cols-2">
+    {blocks.map((b) => (
+      <article id={b.id} class={`scroll-mt-24 rounded-3xl p-8 sm:p-10 ${b.tint}`}>
+        <span class={`inline-block h-1.5 w-12 rounded-full ${b.accent}`}></span>
+        <p class="mt-5 font-display text-lg font-semibold text-arena">{b.kicker}</p>
+        <h2 class="mt-1 font-display text-3xl font-semibold leading-tight sm:text-4xl">{b.title}</h2>
+        <p class="mt-4 text-lg leading-relaxed text-arena">{b.text}</p>
+      </article>
+    ))}
+  </div>
+</section>

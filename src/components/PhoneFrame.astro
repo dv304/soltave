@@ -1,0 +1,27 @@
+---
+/** Captura de la app dentro de un marco de teléfono. */
+interface Props {
+  src: string;
+  alt: string;
+  class?: string;
+  eager?: boolean;
+  [key: string]: unknown;
+}
+
+const { src, alt, class: className = "", eager = false, ...rest } = Astro.props;
+---
+
+<div
+  class={`relative overflow-hidden rounded-[2.2rem] border-[6px] border-cafe bg-cafe shadow-[0_30px_60px_-20px_rgba(35,28,21,0.45)] ${className}`}
+  {...rest}
+>
+  <img
+    src={src}
+    alt={alt}
+    width="824"
+    height="1834"
+    loading={eager ? "eager" : "lazy"}
+    decoding="async"
+    class="block aspect-[824/1834] h-auto w-full object-cover object-top"
+  />
+</div>

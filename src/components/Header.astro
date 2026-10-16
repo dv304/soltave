@@ -1,0 +1,31 @@
+---
+const links = [
+  { href: "#como-funciona", label: "Cómo funciona" },
+  { href: "#pantallas", label: "La app" },
+  { href: "#mision", label: "Misión" },
+  { href: "#vision", label: "Visión" },
+];
+---
+
+<header class="sticky top-0 z-40 border-b border-linea/70 bg-papel/85 backdrop-blur">
+  <nav class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6" aria-label="Principal">
+    <a href="#inicio" class="flex items-center gap-2" aria-label="Soltá Ve, ir al inicio">
+      <img src="/img/logo.png" alt="" width="40" height="40" class="h-10 w-10" />
+      <span class="font-display text-xl font-semibold tracking-tight">Soltá Ve</span>
+    </a>
+
+    <ul class="hidden items-center gap-7 text-sm font-medium text-arena md:flex">
+      {links.map((l) => (
+        <li><a href={l.href} class="transition-colors hover:text-coral">{l.label}</a></li>
+      ))}
+    </ul>
+
+    <a
+      href="#descarga"
+      data-button
+      class="rounded-full bg-coral px-4 py-2 text-sm font-semibold text-white shadow-sm"
+    >
+      Próximamente
+    </a>
+  </nav>
+</header>
