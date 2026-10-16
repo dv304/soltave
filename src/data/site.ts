@@ -1,3 +1,6 @@
+/** Ruta de un archivo de public/ con el prefijo del sitio (en GitHub Pages el sitio vive en /soltave/). */
+export const asset = (path: string) => `${import.meta.env.BASE_URL.replace(/\/$/, "")}/${path.replace(/^\//, "")}`;
+
 // Datos generales del sitio. Cambia aquí los enlaces de contacto.
 export const site = {
   name: "Soltá Ve",

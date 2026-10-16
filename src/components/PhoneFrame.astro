@@ -1,4 +1,6 @@
 ---
+import { asset } from "../data/site";
+
 /** Captura de la app dentro de un marco de teléfono. */
 interface Props {
   src: string;
@@ -16,7 +18,7 @@ const { src, alt, class: className = "", eager = false, ...rest } = Astro.props;
   {...rest}
 >
   <img
-    src={src}
+    src={asset(src)}
     alt={alt}
     width="824"
     height="1834"

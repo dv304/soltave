@@ -1,11 +1,11 @@
 ---
-import { site } from "../data/site";
+import { asset, site } from "../data/site";
 const year = new Date().getFullYear();
 ---
 
 <section id="descarga" class="mx-auto max-w-6xl scroll-mt-20 px-4 pb-20 sm:px-6">
   <div data-reveal class="relative overflow-hidden rounded-[2rem] bg-crema px-6 py-14 text-center sm:px-12">
-    <img src="/img/logo.png" alt="" width="88" height="88" class="mx-auto h-20 w-20" />
+    <img src={asset("/img/logo.png")} alt="" width="88" height="88" class="mx-auto h-20 w-20" />
     <h2 class="mt-6 font-display text-4xl font-semibold sm:text-5xl">Muy pronto en Android</h2>
     <p class="mx-auto mt-4 max-w-xl text-lg leading-relaxed text-arena">
       Soltá Ve está en su etapa final de desarrollo. Escríbenos si quieres probarla antes que nadie.
@@ -19,7 +19,7 @@ const year = new Date().getFullYear();
 <footer class="border-t border-linea">
   <div class="mx-auto flex max-w-6xl flex-col items-center justify-between gap-6 px-4 py-10 text-sm text-arena sm:flex-row sm:px-6">
     <div class="flex items-center gap-3">
-      <img src="/img/logo.png" alt="" width="32" height="32" class="h-8 w-8" />
+      <img src={asset("/img/logo.png")} alt="" width="32" height="32" class="h-8 w-8" />
       <p>© {year} {site.name} · by {site.author}. Todos los derechos reservados.</p>
     </div>
     <ul class="flex gap-6 font-medium">

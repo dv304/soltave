@@ -90,7 +90,7 @@ function screenModeToggle() {
       if (!reduceMotion) await animate(images, { opacity: 0, scale: 0.97 }, { duration: 0.18 });
       images.forEach((img) => {
         const id = img.closest<HTMLElement>("[data-screen]")?.dataset.screen;
-        img.src = `/img/app/${id}-${mode}.png`;
+        img.src = `${import.meta.env.BASE_URL.replace(/\/$/, "")}/img/app/${id}-${mode}.png`;
       });
       if (!reduceMotion) animate(images, { opacity: 1, scale: 1 }, { duration: 0.3, delay: stagger(0.05) });
     }),
