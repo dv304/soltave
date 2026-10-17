@@ -72,8 +72,8 @@ const firstExercise = EXERCISES[0];
                 <div class="bars">
                   {week.map((w) => (
                     <div class="bar">
-                      <i class:list={[{ today: w.today, empty: w.v === 0 }]} style={`height:${(w.v / 5) * 100}%`} data-grow></i>
-                      <span class:list={[{ today: w.today }]}>{w.d}</span>
+                      <i class:list={[{ "is-today": w.today, empty: w.v === 0 }]} style={`height:${(w.v / 5) * 100}%`} data-grow></i>
+                      <span class:list={[{ "is-today": w.today }]}>{w.d}</span>
                     </div>
                   ))}
                 </div>

@@ -40,7 +40,8 @@ function heroIntro() {
   if (front) animate(front, { y: [0, -10, 0] }, { duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1.4 });
   if (back) animate(back, { y: [0, 8, 0] }, { duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1.4 });
   const hero = document.getElementById("inicio");
-  if (hero && back) scroll(animate(back, { x: [0, 30] }), { target: hero, offset: ["start start", "end start"] });
+  // En celular no se separan: se saldrían de la pantalla.
+  if (hero && back && matchMedia("(min-width: 768px)").matches) scroll(animate(back, { x: [0, 30] }), { target: hero, offset: ["start start", "end start"] });
 }
 
 // --- Apariciones al entrar en pantalla ---

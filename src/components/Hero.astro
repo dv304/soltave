@@ -57,11 +57,11 @@ const letters = [..."Soltá Ve"].map((ch) =>
     </div>
 
     <!-- Dos teléfonos con la app simulada: modo claro adelante (se puede usar) y modo oscuro atrás -->
-    <div class="relative mx-auto h-[33rem] w-full max-w-md sm:h-[37rem]">
-      <div id="hero-phone-back" data-hero class="absolute right-0 top-0 w-[50%] rotate-6">
+    <div class="relative mx-auto aspect-[5/6] w-full max-w-[22rem] sm:aspect-auto sm:h-[37rem] sm:max-w-md">
+      <div id="hero-phone-back" data-hero class="absolute right-[4%] top-0 w-[46%] rotate-6 sm:right-0 sm:w-[50%]">
         <AppSim theme="dark" start="inicio" pages={["inicio"]} label="La app Soltá Ve en modo oscuro" />
       </div>
-      <div id="hero-phone-front" data-hero class="absolute bottom-0 left-2 w-[56%] -rotate-3">
+      <div id="hero-phone-front" data-hero class="absolute bottom-0 left-[4%] w-[50%] -rotate-3 sm:left-2 sm:w-[56%]">
         <AppSim theme="light" start="inicio" mode="interactive" label="La app Soltá Ve en modo claro. Puedes tocarla y navegar." />
       </div>
     </div>

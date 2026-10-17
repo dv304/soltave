@@ -86,7 +86,8 @@
   background: var(--coral); color: var(--on-coral); font-size: 15px; font-weight: 700; cursor: pointer;
 }
 .chip { display: inline-flex; align-items: center; height: 26px; padding: 0 12px; border-radius: 99px; background: var(--s-bg); color: var(--s-dim); font-size: 11.5px; font-weight: 600; }
-.sim button { font: inherit; border: 0; background: none; padding: 0; cursor: pointer; }
+/* :where() deja este reinicio sin peso, para que .btn, .cta, .help y .next conserven su fondo. */
+:where(.sim) button { font: inherit; border: 0; background: none; padding: 0; cursor: pointer; }
 .sim [data-act] { cursor: pointer; }
 
 /* Inicio */
@@ -107,10 +108,10 @@
 .bars { display: flex; align-items: flex-end; justify-content: space-between; height: 118px; margin-top: 12px; padding: 0 6px; }
 .bar { width: 26px; display: flex; flex-direction: column; align-items: center; gap: 8px; height: 100%; justify-content: flex-end; }
 .bar i { display: block; width: 100%; border-radius: 8px; background: color-mix(in srgb, var(--coral) 55%, transparent); transform-origin: bottom; }
-.bar i.today { background: var(--coral); }
+.bar i.is-today { background: var(--coral); }
 .bar i.empty { height: 4px !important; background: var(--s-line); }
 .bar span { font-size: 11px; font-weight: 700; color: var(--s-faint); }
-.bar span.today { color: var(--coral); }
+.bar span.is-today { color: var(--coral); }
 .track { height: 8px; border-radius: 9px; background: var(--s-line); overflow: hidden; }
 .track i { display: block; height: 100%; border-radius: 9px; }
 .tip { background: color-mix(in srgb, var(--violet) 16%, var(--s-surface2)); }
