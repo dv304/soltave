@@ -79,22 +79,15 @@ function interactions() {
   });
 }
 
-// --- Galería: interruptor de modo claro/oscuro ---
+// --- «Pruébala»: interruptor de modo claro/oscuro del teléfono simulado ---
 function screenModeToggle() {
   const buttons = document.querySelectorAll<HTMLButtonElement>("[data-mode-btn]");
-  const images = document.querySelectorAll<HTMLImageElement>("[data-screen] img");
-  buttons.forEach((btn) =>
-    btn.addEventListener("click", async () => {
-      const mode = btn.dataset.modeBtn;
-      buttons.forEach((b) => b.setAttribute("aria-pressed", String(b === btn)));
-      if (!reduceMotion) await animate(images, { opacity: 0, scale: 0.97 }, { duration: 0.18 });
-      images.forEach((img) => {
-        const id = img.closest<HTMLElement>("[data-screen]")?.dataset.screen;
-        img.src = `${import.meta.env.BASE_URL.replace(/\/$/, "")}/img/app/${id}-${mode}.png`;
-      });
-      if (!reduceMotion) animate(images, { opacity: 1, scale: 1 }, { duration: 0.3, delay: stagger(0.05) });
-    }),
-  );
+  const phone = document.querySelector<HTMLElement & { __sim?: { setTheme(t: string): void } }>("#try-phone [data-sim]");
+  if (!phone) return;
+  const sync = (mode: string) => buttons.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.modeBtn === mode)));
+  buttons.forEach((btn) => btn.addEventListener("click", () => phone.__sim?.setTheme(btn.dataset.modeBtn!)));
+  // El tema también se cambia desde Ajustes, dentro de la app.
+  phone.addEventListener("sim:theme", (e) => sync((e as CustomEvent<string>).detail));
 }
 
 heroIntro();

@@ -1,0 +1,316 @@
+---
+/**
+ * Simulador de la app Soltá Ve dentro de un teléfono: las pantallas reales recreadas en HTML con los colores, textos
+ * y ejercicios del código de la app, y las manos ilustradas de Figma animadas. Lo controla src/scripts/sim.ts.
+ *
+ * mode:
+ *  - "interactive": se puede navegar (pestañas, abrir ejercicios, hacer la rutina, botón «?»).
+ *  - "static": solo se ve (las manos sí se animan).
+ *  - "guided": lo maneja otra parte de la página (el recorrido paso a paso).
+ */
+import "../../styles/sim.css";
+import { EXERCISES, FINGER_COLORS, POSES, TIPS, figColor } from "./data";
+import { ICON } from "./icons";
+
+interface Props {
+  theme?: "light" | "dark";
+  start?: string;
+  pages?: string[] | "all";
+  mode?: "interactive" | "static" | "guided";
+  class?: string;
+  label?: string;
+}
+const { theme = "light", start = "inicio", pages = "all", mode = "static", class: className = "", label = "Simulación de la app Soltá Ve" } = Astro.props;
+const has = (p: string) => pages === "all" || pages.includes(p);
+const tabsPages = ["inicio", "terapia", "rachas", "perfil"];
+
+const week = [
+  { d: "L", v: 5 }, { d: "M", v: 4 }, { d: "X", v: 5 }, { d: "J", v: 2 }, { d: "V", v: 3, today: true }, { d: "S", v: 0 }, { d: "D", v: 0 },
+];
+// Octubre de 2026 empieza en jueves. Intensidad de cada día (0 a 3) y el día de hoy.
+const monthLevels: Record<number, number> = { 1: 2, 2: 3, 5: 1, 6: 2, 7: 3, 8: 2, 9: 1, 12: 2, 13: 3, 14: 2, 15: 3 };
+const today = 16;
+const historyBars = [2, 3, 0, 1, 3, 2, 0, 2, 1, 0, 0, 2, 3, 2, 3, 3];
+const firstExercise = EXERCISES[0];
+---
+
+<div class={`sim ${className}`} data-sim data-mode={mode} data-theme={theme} data-start={start} data-tabs={tabsPages.includes(start) ? "on" : "off"} role="group" aria-label={label}>
+  <div class="sim-device">
+    <span class="sim-side"></span>
+    <div class="sim-viewport">
+      <div class="sim-screen">
+        <div class="sim-status">
+          <span>9:41</span>
+          <svg viewBox="0 0 64 16" aria-hidden="true"><rect x="0" y="9" width="3.5" height="6" rx="1"/><rect x="5" y="6" width="3.5" height="9" rx="1"/><rect x="10" y="3" width="3.5" height="12" rx="1"/><rect x="15" y="0" width="3.5" height="15" rx="1"/><path d="M30 4.5a10 10 0 0 1 7.6 3.4l-1.7 1.6A7.6 7.6 0 0 0 30 6.9a7.6 7.6 0 0 0-5.9 2.6l-1.7-1.6A10 10 0 0 1 30 4.5zm0 4.6a5.3 5.3 0 0 1 4 1.8L30 15l-4-4.1a5.3 5.3 0 0 1 4-1.8z"/><rect x="42" y="2" width="20" height="12" rx="3.5" fill="none" stroke="currentColor" stroke-width="1.6"/><rect x="44" y="4" width="15" height="8" rx="2"/></svg>
+        </div>
+        <div class="sim-island"></div>
+
+        <div class="sim-pages">
+          {has("inicio") && (
+            <section class="sim-page" data-page="inicio">
+              <div class="row between">
+                <div class="grow">
+                  <h1 class="t-head">Hola, Daniel</h1>
+                  <p class="t-body c-dim">Sigamos cuidando tu muñeca</p>
+                </div>
+                <span class="pill" data-hl="racha"><svg class="icon" viewBox="0 0 24 24" style="color:var(--amber)"><path d={ICON.flame} /></svg>5</span>
+                <button class="help" data-act="tour" data-hl="ayuda" aria-label="Ver el recorrido">?</button>
+              </div>
+              <div class="today" data-hl="hoy">
+                <p class="t-label">Terapia de hoy</p>
+                <h2 data-bind="today-title">Vas 3 de 5 ejercicios</h2>
+                <p data-bind="today-text">Te faltan 2 ejercicios para completar la terapia de hoy. ¡Sigue así!</p>
+                <button class="cta" data-act="go:terapia">Continuar</button>
+              </div>
+              <div class="stats" data-hl="stats">
+                <div class="stat"><b data-bind="done-count">3/5</b><span>ejercicios hoy</span></div>
+                <div class="stat"><b>4</b><span>terapias esta semana</span></div>
+                <div class="stat"><b>5</b><span>días de racha</span></div>
+              </div>
+              <div class="card" data-hl="semana">
+                <div class="row between"><span class="t-m">Tu semana</span><span class="t-label c-faint">ejercicios por día</span></div>
+                <div class="bars">
+                  {week.map((w) => (
+                    <div class="bar">
+                      <i class:list={[{ today: w.today, empty: w.v === 0 }]} style={`height:${(w.v / 5) * 100}%`} data-grow></i>
+                      <span class:list={[{ today: w.today }]}>{w.d}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div class="card row" data-hl="logro" style="gap:14px">
+                <span class="circle" style="width:48px;height:48px;background:color-mix(in srgb,var(--amber) 22%,transparent);color:var(--amber)"><svg class="icon" viewBox="0 0 24 24"><path d={ICON.trophy} /></svg></span>
+                <div class="grow">
+                  <p class="t-small c-dim">Próximo logro</p>
+                  <p class="t-m">Una semana de racha</p>
+                  <div class="track" style="margin-top:8px"><i style="width:71%;background:var(--amber)" data-grow-x></i></div>
+                  <p class="t-small c-faint" style="margin-top:4px">5 de 7 días</p>
+                </div>
+                <svg class="icon c-dim" viewBox="0 0 24 24"><path d={ICON.right} /></svg>
+              </div>
+              <div class="card tip row" data-hl="consejo" data-act="tip" style="align-items:flex-start;gap:14px">
+                <span class="circle" style="width:44px;height:44px;background:color-mix(in srgb,var(--violet) 25%,transparent);color:var(--violet)"><svg class="icon" viewBox="0 0 24 24"><path d={ICON.bulb} /></svg></span>
+                <div class="grow">
+                  <p class="t-small" style="color:var(--violet);font-weight:600">Consejo del día</p>
+                  <p class="t-m" data-bind="tip-title">{TIPS[0].title}</p>
+                  <p class="t-body c-dim" data-bind="tip-text">{TIPS[0].text}</p>
+                  <p class="t-small" style="color:var(--violet);font-weight:600;margin-top:4px">Toca para ver más consejos</p>
+                </div>
+              </div>
+            </section>
+          )}
+
+          {has("terapia") && (
+            <section class="sim-page" data-page="terapia">
+              <h1 class="t-title" style="margin-top:4px">Terapia</h1>
+              <div class="card" data-hl="resumen">
+                <div class="row between">
+                  <div><p class="t-m">Vas muy bien</p><p class="t-small c-dim" data-bind="summary">3 de 5 ejercicios · ~6 min en total</p></div>
+                  <span class="t-title" style="color:var(--coral)" data-bind="pct">60%</span>
+                </div>
+                <div class="track" style="margin-top:12px"><i style="width:60%;background:var(--coral)" data-bind="pct-bar"></i></div>
+              </div>
+              {EXERCISES.map((ex) => (
+                <div class="card ex" data-ex={ex.id} data-hl={`ex-${ex.id}`} style={`--ex-color:${ex.color}`}>
+                  <div class="head" data-act={`toggle:${ex.id}`}>
+                    <span class="circle ico" data-ex-ico style={ex.done ? "background:var(--green);color:#1b1712" : `background:color-mix(in srgb,${ex.color} 22%,transparent);color:${ex.color}`}>
+                      <svg class="icon" viewBox="0 0 24 24"><path d={ex.done ? ICON.check : ICON.hand} /></svg>
+                    </span>
+                    <div class="grow"><p class="t-m">{ex.title}</p><p class="t-small c-dim">{ex.subtitle} · {ex.minutes}</p></div>
+                    <svg class="icon chev" viewBox="0 0 24 24"><path d={ICON.down} /></svg>
+                  </div>
+                  <div class="more">
+                    <div class="divider"></div>
+                    <p class="t-body c-dim">{ex.description}</p>
+                    <p class="t-small c-faint" style="margin-top:8px">Nombre técnico: {ex.tech}</p>
+                    <div class="chips">{ex.benefits.map((b) => <span class="chip">{b}</span>)}</div>
+                    <button class="btn" style="margin-top:14px" data-act={`tutorial:${ex.id}`}>Empezar ejercicio</button>
+                  </div>
+                </div>
+              ))}
+            </section>
+          )}
+
+          {EXERCISES.filter((ex) => has(`tutorial-${ex.id}`) || has("tutorial")).map((ex) => {
+            const pose = POSES[ex.poses[0]];
+            return (
+              <section class="sim-page" data-page={`tutorial-${ex.id}`} data-notabs>
+                <div class="topbar"><button data-act="back:terapia" aria-label="Volver"><svg class="icon" viewBox="0 0 24 24"><path d={ICON.back} /></svg></button><span class="t-title">Tutorial</span></div>
+                <span class="chip" style="background:var(--s-surface2)">{ex.chip}</span>
+                <h2 class="t-head" style="font-size:24px">{ex.title}</h2>
+                <p class="t-body c-dim">
+                  {ex.id === "apertura_cierre" ? "Pon la mano frente a la cámara frontal: la app reconoce cuando la abres y la cierras, y cuenta cada repetición."
+                    : ex.id === "estiramiento_muneca" ? "Apoya el teléfono cerca. Se alternan las posturas: sostén cada una 30 segundos y, al cambiar, tendrás unos segundos para acomodar la mano."
+                    : "Sigue la guía: cada fase dura 3 segundos. Sentirás una vibración cuando debas pasar a la siguiente postura."}
+                </p>
+                <div class="demo" data-hl="ejemplo" data-demo data-ex={ex.id}>
+                  <div class="row between" style="width:100%"><span class="t-label c-faint">Ejemplo</span><span class="t-label c-faint">Así se hace</span></div>
+                  <svg class="hand" viewBox={pose.vb} data-hand data-poses={ex.poses.join(",")} aria-hidden="true" style="margin-top:6px">
+                    {pose.p.map(([d, s, f, w, o]) => (
+                      <path d={d} stroke={s ? figColor(s) : "none"} fill={f ? figColor(f) : "none"} stroke-width={w || undefined} stroke-linecap="round" opacity={o || undefined} />
+                    ))}
+                  </svg>
+                  <p class="t-m" data-pose-label style="margin-top:6px">{ex.labels[0]}</p>
+                  <p class="t-small c-dim" data-pose-hint style="min-height:36px;margin-top:4px">{ex.hints[0]}</p>
+                  <div class="steps">
+                    {ex.labels.map((l, i) => (
+                      <span data-pose-step={i} class:list={[{ on: i === 0 }]} style={ex.colorByFinger ? `--on:${FINGER_COLORS[i]}` : undefined}>{i + 1}. {l}</span>
+                    ))}
+                  </div>
+                </div>
+                <div class="card t-small c-dim" style="padding:12px 14px">El primer día te pediremos responder una autoevaluación rápida antes de empezar.</div>
+                <button class="btn" data-act={`start:${ex.id}`}>Empezar ejercicio</button>
+              </section>
+            );
+          })}
+
+          {has("ejercicio") && (
+            <section class="sim-page" data-page="ejercicio" data-notabs>
+              <div class="topbar"><button data-act="back:terapia" aria-label="Volver"><svg class="icon" viewBox="0 0 24 24"><path d={ICON.back} /></svg></button><span class="t-title">Terapia</span></div>
+              <p class="t-m" data-run="title">{firstExercise.title}</p>
+              <div class="segs" data-run="segs"></div>
+              <div class="demo" data-hl="ejercicio" style="padding:18px 16px 22px">
+                <p class="t-small c-dim" data-run="round">Ronda 1 de {firstExercise.rounds}</p>
+                <svg class="hand" viewBox="0 0 300 214" data-hand data-run="hand" aria-hidden="true"></svg>
+                <p class="t-title" data-run="label">{firstExercise.labels[0]}</p>
+                <p class="t-small c-dim" data-run="hint" style="min-height:36px;margin-top:4px">{firstExercise.hints[0]}</p>
+                <p class="count" data-run="count">3</p>
+                <p class="t-small c-faint" data-run="next" style="margin-top:6px">Siguiente: {firstExercise.labels[1]}</p>
+              </div>
+              <button class="btn" data-act="finish">Finalizar antes de tiempo</button>
+            </section>
+          )}
+
+          {has("completada") && (
+            <section class="sim-page" data-page="completada" data-notabs style="text-align:center">
+              <div class="done-check circle" data-hl="completada-check"><svg class="icon" viewBox="0 0 24 24" style="width:40px;height:40px"><path d={ICON.check} /></svg></div>
+              <h2 class="t-head" style="margin-top:22px">¡Sesión completada!</h2>
+              <p class="t-body c-dim" data-run="done-title">Dedos en abanico</p>
+              <div class="stats" style="grid-template-columns:1fr 1fr" data-hl="completada">
+                <div class="stat"><b data-run="done-reps">16</b><span>repeticiones</span></div>
+                <div class="stat"><b data-run="done-time">0:52</b><span>duración</span></div>
+              </div>
+              <div class="card row t-small" style="text-align:left"><span class="circle" style="width:10px;height:10px;background:var(--amber)"></span>+1 día · ahora llevas 5 días de racha</div>
+              <button class="btn" style="margin-top:40px" data-act="home">Volver al inicio</button>
+            </section>
+          )}
+
+          {has("rachas") && (
+            <section class="sim-page" data-page="rachas">
+              <h1 class="t-title" style="margin-top:4px">Recompensas</h1>
+              <div class="card row" data-hl="racha-card" style="gap:14px">
+                <span class="circle" style="width:46px;height:46px;background:var(--amber);color:#1b1712"><svg class="icon" viewBox="0 0 24 24"><path d={ICON.flame} /></svg></span>
+                <div><p class="t-title">5 días</p><p class="t-small c-dim">racha activa · mejor: 12</p></div>
+              </div>
+              <div class="card" data-hl="calendario">
+                <div class="row between"><span class="t-m">Tu semana</span><span class="t-label" style="color:var(--coral)">Ocultar calendario ⌃</span></div>
+                <div class="days7">{["L", "M", "X", "J", "V", "S", "D"].map((d, i) => <span class:list={[{ ok: i < 4, now: i === 4 }]}>{d}</span>)}</div>
+                <div class="row between" style="margin-top:14px"><svg class="icon" viewBox="0 0 24 24"><path d={ICON.left} /></svg><span class="t-m" style="font-weight:500">Octubre 2026</span><svg class="icon" viewBox="0 0 24 24"><path d={ICON.right} /></svg></div>
+                <div class="week-h">{["L", "M", "X", "J", "V", "S", "D"].map((d) => <span>{d}</span>)}</div>
+                <div class="month">
+                  {[0, 1, 2].map(() => <span class="blank"></span>)}
+                  {Array.from({ length: 31 }, (_, k) => k + 1).map((day) => (
+                    <span class:list={[day === today ? "now" : monthLevels[day] ? `l${monthLevels[day]}` : ""]}>{day}</span>
+                  ))}
+                </div>
+                <div class="stats" style="margin-top:14px">
+                  <div class="stat" style="background:var(--s-bg)"><b>12</b><span>días activos</span></div>
+                  <div class="stat" style="background:var(--s-bg)"><b>4</b><span>rutinas completas</span></div>
+                  <div class="stat" style="background:var(--s-bg)"><b>31</b><span>sesiones</span></div>
+                </div>
+                <button class="t-body" style="color:var(--coral);font-weight:700;margin-top:12px" data-act="go:historial">◷ Ver historial completo</button>
+              </div>
+              <p class="t-m" style="margin-top:20px">● <span>Hitos de consistencia</span></p>
+              <div class="badges" data-hl="logros">
+                <div class="badge"><svg viewBox="0 0 48 48"><path d="M24 4 44 24 24 44 4 24z" fill="var(--amber)" /></svg>Racha ×3<small>Desbloqueado</small></div>
+                <div class="badge off"><svg viewBox="0 0 48 48"><path d="M24 4 44 18.5 36.4 42H11.6L4 18.5z" fill="var(--s-faint)" /></svg>Racha ×7<small>7 días seguidos</small></div>
+                <div class="badge off"><svg viewBox="0 0 48 48"><path d="M24 3 42 13.5v21L24 45 6 34.5v-21z" fill="var(--s-faint)" /></svg>Racha ×15<small>15 días seguidos</small></div>
+              </div>
+              <p class="t-m" style="margin-top:20px">● <span>Hitos de sesión</span></p>
+              <div class="badges">
+                <div class="badge"><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="20" fill="var(--violet)" /></svg>Primer paso<small>Desbloqueado</small></div>
+                <div class="badge off"><svg viewBox="0 0 48 48"><path d="M24 4 41 12v16L24 44 7 28V12z" fill="var(--s-faint)" /></svg>Madrugador<small>Antes de las 9 a. m.</small></div>
+                <div class="badge off"><svg viewBox="0 0 48 48"><path d="M24 4 44 18.5 36.4 42H11.6L4 18.5z" fill="var(--s-faint)" /></svg>Búho nocturno<small>Después de las 9 p. m.</small></div>
+              </div>
+            </section>
+          )}
+
+          {has("historial") && (
+            <section class="sim-page" data-page="historial" data-notabs>
+              <div class="topbar"><button data-act="back:perfil" aria-label="Volver"><svg class="icon" viewBox="0 0 24 24"><path d={ICON.back} /></svg></button><span class="t-title">Historial de sesiones</span></div>
+              <div class="seg3"><span class="on">Día</span><span>Mes</span><span>Año</span></div>
+              <div class="row between"><svg class="icon" viewBox="0 0 24 24"><path d={ICON.left} /></svg><span class="t-m" style="font-weight:500">Octubre 2026</span><svg class="icon" viewBox="0 0 24 24"><path d={ICON.right} /></svg></div>
+              <div class="stats">
+                <div class="stat"><b>31</b><span>sesiones</span></div>
+                <div class="stat"><b>48 min</b><span>tiempo</span></div>
+                <div class="stat"><b>12</b><span>días activos</span></div>
+              </div>
+              <div class="card" data-hl="grafica">
+                <p class="t-m">Sesiones por día</p>
+                <p class="t-small" style="color:var(--coral)">16 de octubre: 3 sesiones · 3 min</p>
+                <div class="chart">{historyBars.map((v, i) => <i class:list={[{ z: v === 0 }]} style={`height:${(v / 3) * 100}%;${i === historyBars.length - 1 ? "" : "opacity:.55"}`} data-grow></i>)}</div>
+                <p class="t-small c-faint" style="margin-top:6px">Promedio: 1,9 sesiones por día</p>
+              </div>
+              <div class="card">
+                <p class="t-m">Por ejercicio</p>
+                {[["Abre y cierra la mano", 34, "var(--coral)"], ["Dedos en abanico", 26, "var(--violet)"], ["Cuatro posturas para el nervio", 22, "var(--amber)"], ["Estira la muñeca", 10, "var(--green)"], ["Pulgar a cada dedo", 8, "var(--sky)"]].map(([n, p, c]) => (
+                  <div style="margin-top:10px"><div class="row between t-small"><span>{n}</span><span class="c-faint">{p} %</span></div><div class="track" style="margin-top:4px"><i style={`width:${p}%;background:${c}`} data-grow-x></i></div></div>
+                ))}
+              </div>
+              <button class="btn" data-hl="pdf" style="background:var(--s-surface2);color:var(--coral);gap:8px"><svg class="icon" viewBox="0 0 24 24"><path d={ICON.pdf} /></svg>Exportar reporte clínico en PDF</button>
+            </section>
+          )}
+
+          {has("perfil") && (
+            <section class="sim-page" data-page="perfil">
+              <h1 class="t-title" style="margin-top:4px">Perfil</h1>
+              <div class="avatar" data-hl="foto"><div>DV</div></div>
+              <div style="text-align:center"><p class="t-title">Daniel Valderrama</p><p class="t-small c-faint">Diseñador gráfico · Cali</p></div>
+              <div class="card" data-hl="destacados">
+                <div class="row between"><span class="t-m">Logros destacados</span><span class="t-label" style="color:var(--coral)">Editar</span></div>
+                <div class="mini-badges">
+                  <span><svg viewBox="0 0 48 48"><path d="M24 4 44 24 24 44 4 24z" fill="var(--amber)" /></svg>Racha ×3</span>
+                  <span><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="20" fill="var(--violet)" /></svg>Primer paso</span>
+                  <span><svg viewBox="0 0 48 48"><path d="M24 6 44 42H4z" fill="var(--coral)" /></svg>Primeros pasos</span>
+                </div>
+              </div>
+              <div class="card row" style="gap:14px">
+                <span class="circle" style="width:42px;height:42px;background:color-mix(in srgb,var(--amber) 25%,transparent);color:var(--amber)"><svg class="icon" viewBox="0 0 24 24"><path d={ICON.flame} /></svg></span>
+                <div><p class="t-m">5 días</p><p class="t-small c-dim">racha activa · mejor: 12</p></div>
+              </div>
+              <div class="stats" style="grid-template-columns:1fr 1fr">
+                <div class="stat"><b>128</b><span>repeticiones</span></div>
+                <div class="stat"><b>42</b><span>esta semana</span></div>
+              </div>
+              <div>
+                <div class="menu-row" data-act="go:historial" data-hl="historial-row">Historial de sesiones<svg class="icon c-dim" viewBox="0 0 24 24"><path d={ICON.right} /></svg></div>
+                <div class="menu-row" data-hl="ajustes" data-act="theme">Ajustes · tema claro u oscuro<svg class="icon c-dim" viewBox="0 0 24 24"><path d={ICON.right} /></svg></div>
+              </div>
+            </section>
+          )}
+        </div>
+
+        <nav class="sim-tabs" aria-label="Pestañas de la app">
+          {[["inicio", "Inicio", ICON.home], ["terapia", "Terapia", ICON.heart], ["rachas", "Rachas", ICON.calendar], ["perfil", "Perfil", ICON.person]].map(([id, l, d]) => (
+            <button data-act={`go:${id}`} data-tab={id} class:list={[{ on: id === start }]} tabindex={mode === "interactive" ? undefined : -1}>
+              <span class="pillbg"><svg class="icon" viewBox="0 0 24 24"><path d={d} /></svg></span>{l}
+            </button>
+          ))}
+        </nav>
+
+        <div class="sim-spot" aria-hidden="true"></div>
+        <div class="sim-tourcard" aria-live="polite">
+          <p class="t-label" style="color:var(--coral)" data-tour="step">Paso 1 de 18</p>
+          <p class="t-m" style="margin-top:4px" data-tour="title">¡Bienvenido a Soltá Ve!</p>
+          <p class="t-body c-dim" style="margin-top:6px" data-tour="text">Te mostramos en un minuto cómo funciona la app.</p>
+          <div class="prog"><i data-tour="bar" style="width:6%"></i></div>
+          <div class="row"><button class="t-body c-faint" style="font-weight:700" data-act="tour-skip">Saltar</button><span class="grow"></span><button class="next" data-act="tour-next">Siguiente</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import "../../scripts/sim";
+</script>

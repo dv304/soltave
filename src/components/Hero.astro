@@ -1,5 +1,5 @@
 ---
-import PhoneFrame from "./PhoneFrame.astro";
+import AppSim from "./sim/AppSim.astro";
 import { asset } from "../data/site";
 
 // Cada letra del nombre lleva un color de la mano del logo, como en la app.
@@ -56,13 +56,13 @@ const letters = [..."Soltá Ve"].map((ch) =>
       </div>
     </div>
 
-    <!-- Dos teléfonos: modo claro adelante y modo oscuro atrás -->
-    <div class="relative mx-auto h-[30rem] w-full max-w-md sm:h-[34rem]" aria-label="Pantallas de la app en modo claro y oscuro">
-      <div id="hero-phone-back" data-hero class="absolute right-0 top-0 w-[52%] rotate-6">
-        <PhoneFrame src="/img/app/inicio-oscuro.png" alt="Pantalla de inicio de Soltá Ve en modo oscuro" h={1916} eager />
+    <!-- Dos teléfonos con la app simulada: modo claro adelante (se puede usar) y modo oscuro atrás -->
+    <div class="relative mx-auto h-[33rem] w-full max-w-md sm:h-[37rem]">
+      <div id="hero-phone-back" data-hero class="absolute right-0 top-0 w-[50%] rotate-6">
+        <AppSim theme="dark" start="inicio" pages={["inicio"]} label="La app Soltá Ve en modo oscuro" />
       </div>
       <div id="hero-phone-front" data-hero class="absolute bottom-0 left-2 w-[56%] -rotate-3">
-        <PhoneFrame src="/img/app/inicio-claro.png" alt="Pantalla de inicio de Soltá Ve en modo claro" h={1916} eager />
+        <AppSim theme="light" start="inicio" mode="interactive" label="La app Soltá Ve en modo claro. Puedes tocarla y navegar." />
       </div>
     </div>
   </div>

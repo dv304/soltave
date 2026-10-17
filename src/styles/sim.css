@@ -1,0 +1,199 @@
+/*
+ * Simulador de la app Soltá Ve. La pantalla se diseña a 412 × 892 (las medidas del Figma) y se escala al tamaño
+ * del teléfono con --k (lo calcula src/scripts/sim.ts). Colores: los mismos de Color.kt.
+ */
+.sim {
+  --coral: #ff5a3c;
+  --green: #6fd08c;
+  --amber: #f5b841;
+  --violet: #a68fe3;
+  --sky: #5bb4ea;
+  --k: 0.75;
+  font-family: "Roboto", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+.sim[data-theme="light"] {
+  --s-bg: #f7f2ea; --s-surface: #fffcf7; --s-surface2: #ede5d8; --s-line: #ddd2c2;
+  --s-text: #231c15; --s-dim: #5a4e41; --s-faint: #73665a;
+  --fig: #e9a47f; --fig-dim: #f2c9ae; --on-coral: #f7f2ea; --today-btn: #f7f2ea;
+}
+.sim[data-theme="dark"] {
+  --s-bg: #1b1712; --s-surface: #26201a; --s-surface2: #312a21; --s-line: #3c3327;
+  --s-text: #f3ece2; --s-dim: #bcb0a1; --s-faint: #9a8b7a;
+  --fig: #f3ece2; --fig-dim: #bcb0a1; --on-coral: #1b1712; --today-btn: #1b1712;
+}
+
+/* ---------- Teléfono ---------- */
+.sim-device {
+  position: relative;
+  border-radius: 3.1rem;
+  padding: 9px;
+  background: #15110d;
+  box-shadow: 0 0 0 1.5px #3a3229 inset, 0 40px 70px -25px rgba(35, 28, 21, 0.5);
+}
+.sim-device::before, .sim-device::after {
+  content: ""; position: absolute; left: -3px; width: 4px; border-radius: 3px; background: #2e2720;
+}
+.sim-device::before { top: 22%; height: 7%; }
+.sim-device::after { top: 32%; height: 11%; }
+.sim-side { position: absolute; right: -3px; top: 27%; width: 4px; height: 12%; border-radius: 3px; background: #2e2720; }
+.sim-viewport {
+  position: relative; overflow: hidden; border-radius: 2.55rem; aspect-ratio: 412 / 892; background: var(--s-bg);
+  container-type: inline-size;
+}
+.sim-screen {
+  position: absolute; left: 0; top: 0; width: 412px; height: 892px; transform: scale(var(--k)); transform-origin: 0 0;
+  background: var(--s-bg); color: var(--s-text); overflow: hidden; transition: background-color .4s, color .4s;
+}
+.sim-status {
+  position: absolute; inset: 0 0 auto 0; height: 44px; z-index: 6; display: flex; align-items: center; justify-content: space-between;
+  padding: 6px 30px 0 34px; font-size: 14px; font-weight: 700; color: var(--s-text); pointer-events: none;
+}
+.sim-status svg { height: 13px; fill: currentColor; }
+.sim-island { position: absolute; top: 11px; left: 50%; width: 112px; height: 32px; margin-left: -56px; border-radius: 20px; background: #0b0907; z-index: 7; }
+
+/* ---------- Páginas ---------- */
+.sim-pages { position: absolute; inset: 0; }
+.sim-page {
+  position: absolute; inset: 0; padding: 52px 20px 96px; overflow-y: auto; scrollbar-width: none; display: none;
+}
+.sim-page::-webkit-scrollbar { display: none; }
+.sim-page.is-active { display: block; }
+.sim-page[data-notabs] { padding-bottom: 28px; }
+.sim-page > * + * { margin-top: 14px; }
+
+.t-head { font-size: 26px; font-weight: 700; letter-spacing: -0.01em; }
+.t-title { font-size: 20px; font-weight: 700; }
+.t-m { font-size: 16px; font-weight: 700; }
+.t-body { font-size: 14px; line-height: 1.45; }
+.t-small { font-size: 12.5px; line-height: 1.4; }
+.t-label { font-size: 11px; font-weight: 700; }
+.c-dim { color: var(--s-dim); }
+.c-faint { color: var(--s-faint); }
+.row { display: flex; align-items: center; gap: 10px; }
+.between { justify-content: space-between; }
+.grow { flex: 1; min-width: 0; }
+
+.card { background: var(--s-surface2); border-radius: 22px; padding: 16px; transition: background-color .4s; }
+.icon { width: 22px; height: 22px; fill: currentColor; flex: none; }
+.circle { border-radius: 999px; display: flex; align-items: center; justify-content: center; flex: none; }
+
+.topbar { display: flex; align-items: center; gap: 12px; height: 48px; }
+.topbar button { display: flex; color: var(--s-text); }
+
+.btn {
+  display: flex; align-items: center; justify-content: center; width: 100%; height: 54px; border-radius: 16px;
+  background: var(--coral); color: var(--on-coral); font-size: 15px; font-weight: 700; cursor: pointer;
+}
+.chip { display: inline-flex; align-items: center; height: 26px; padding: 0 12px; border-radius: 99px; background: var(--s-bg); color: var(--s-dim); font-size: 11.5px; font-weight: 600; }
+.sim button { font: inherit; border: 0; background: none; padding: 0; cursor: pointer; }
+.sim [data-act] { cursor: pointer; }
+
+/* Inicio */
+.hello { display: flex; align-items: center; gap: 8px; }
+.pill { display: inline-flex; align-items: center; gap: 6px; height: 42px; padding: 0 14px; border-radius: 99px; background: var(--s-surface2); font-weight: 700; font-size: 16px; }
+.help { width: 44px; height: 44px; border-radius: 99px; background: var(--s-surface2); color: var(--coral); font-weight: 700; font-size: 18px; }
+.today { background: var(--coral); color: #fff; border-radius: 24px; padding: 18px; }
+.today .t-label { color: #2b130d; opacity: .85; }
+.today h2 { font-size: 24px; font-weight: 700; margin-top: 4px; color: #231c15; }
+.sim[data-theme="light"] .today h2, .sim[data-theme="light"] .today .t-label { color: #fff; opacity: 1; }
+.today p { font-size: 14px; margin-top: 4px; color: #2b130d; }
+.sim[data-theme="light"] .today p { color: #fff; }
+.today .cta { margin-top: 12px; display: inline-flex; height: 38px; align-items: center; padding: 0 18px; border-radius: 12px; background: var(--today-btn); color: var(--coral); font-weight: 700; font-size: 14px; }
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.stat { background: var(--s-surface2); border-radius: 18px; padding: 12px 6px; text-align: center; }
+.stat b { display: block; font-size: 22px; }
+.stat span { font-size: 11px; color: var(--s-dim); }
+.bars { display: flex; align-items: flex-end; justify-content: space-between; height: 118px; margin-top: 12px; padding: 0 6px; }
+.bar { width: 26px; display: flex; flex-direction: column; align-items: center; gap: 8px; height: 100%; justify-content: flex-end; }
+.bar i { display: block; width: 100%; border-radius: 8px; background: color-mix(in srgb, var(--coral) 55%, transparent); transform-origin: bottom; }
+.bar i.today { background: var(--coral); }
+.bar i.empty { height: 4px !important; background: var(--s-line); }
+.bar span { font-size: 11px; font-weight: 700; color: var(--s-faint); }
+.bar span.today { color: var(--coral); }
+.track { height: 8px; border-radius: 9px; background: var(--s-line); overflow: hidden; }
+.track i { display: block; height: 100%; border-radius: 9px; }
+.tip { background: color-mix(in srgb, var(--violet) 16%, var(--s-surface2)); }
+
+/* Terapia */
+.ex .head { display: flex; align-items: center; gap: 14px; }
+.ex .ico { width: 48px; height: 48px; }
+.ex .more { display: none; }
+.ex.is-open { box-shadow: 0 0 0 1.5px var(--ex-color) inset; }
+.ex.is-open .more { display: block; }
+.ex.is-open .chev { transform: rotate(180deg); }
+.ex .chev { transition: transform .3s; color: var(--s-dim); }
+.divider { height: 1px; background: var(--s-line); margin: 14px 0; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+
+/* Tutorial y ejercicio */
+.demo { background: var(--s-surface2); border-radius: 24px; padding: 16px; display: flex; flex-direction: column; align-items: center; text-align: center; }
+.demo svg.hand { width: 88%; height: auto; overflow: visible; }
+.steps { display: flex; gap: 6px; width: 100%; margin-top: 12px; }
+.steps span { flex: 1; height: 30px; border-radius: 99px; background: var(--s-bg); color: var(--s-dim); font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; transition: background-color .3s, color .3s; }
+.steps span.on { background: var(--on, var(--coral)); color: #fff; }
+.count { font-size: 48px; font-weight: 700; color: var(--coral); line-height: 1; margin-top: 8px; }
+.segs { display: flex; gap: 6px; }
+.segs i { flex: 1; height: 26px; border-radius: 99px; background: var(--s-surface2); display: flex; align-items: center; justify-content: center; font-size: 11px; font-style: normal; font-weight: 700; color: var(--s-dim); }
+.segs i.on { background: var(--coral); color: #fff; }
+.done-check { width: 76px; height: 76px; border-radius: 99px; background: var(--green); color: #fff; margin: 70px auto 0; }
+
+/* Rachas */
+.days7 { display: flex; justify-content: space-between; margin-top: 12px; }
+.days7 span { width: 40px; height: 40px; border-radius: 99px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; background: var(--s-bg); color: var(--s-faint); }
+.days7 .ok { background: var(--green); color: #1b1712; }
+.days7 .now { background: var(--coral); color: #fff; }
+.month { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-top: 10px; }
+.month span { aspect-ratio: 1; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 12.5px; font-weight: 600; background: var(--s-bg); color: var(--s-dim); }
+.month .l1 { background: color-mix(in srgb, var(--green) 35%, var(--s-bg)); color: var(--s-text); }
+.month .l2 { background: color-mix(in srgb, var(--green) 70%, var(--s-bg)); color: var(--s-text); }
+.month .l3 { background: var(--green); color: #1b1712; }
+.month .now { background: var(--coral); color: #fff; }
+.month .blank { background: none; }
+.week-h { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-size: 11px; color: var(--s-faint); font-weight: 700; margin-top: 12px; }
+.badges { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.badge { background: var(--s-surface2); border-radius: 20px; padding: 14px 6px; text-align: center; font-size: 12px; font-weight: 700; }
+.badge small { display: block; font-weight: 500; color: var(--s-faint); font-size: 10.5px; margin-top: 2px; }
+.badge svg { width: 46px; height: 46px; margin: 0 auto 8px; display: block; }
+.badge.off svg { opacity: .35; }
+.badge.off { color: var(--s-faint); }
+
+/* Historial */
+.seg3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.seg3 span { height: 34px; border-radius: 99px; background: var(--s-surface2); display: flex; align-items: center; justify-content: center; font-size: 12.5px; font-weight: 700; color: var(--s-dim); }
+.seg3 .on { background: var(--coral); color: #fff; }
+.chart { display: flex; align-items: flex-end; gap: 4px; height: 120px; margin-top: 12px; border-bottom: 1px solid var(--s-line); }
+.chart i { flex: 1; border-radius: 4px 4px 0 0; background: var(--coral); transform-origin: bottom; }
+.chart i.z { background: var(--s-line); height: 3px !important; }
+
+/* Perfil */
+.avatar { width: 128px; height: 128px; margin: 6px auto 0; border-radius: 99px; border: 4px solid var(--coral); padding: 6px; }
+.avatar div { width: 100%; height: 100%; border-radius: 99px; background: var(--s-surface2); display: flex; align-items: center; justify-content: center; font-size: 34px; font-weight: 700; }
+.menu-row { display: flex; align-items: center; justify-content: space-between; height: 56px; border-top: 1px solid var(--s-line); font-size: 16px; }
+.mini-badges { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 10px; }
+.mini-badges span { background: var(--s-bg); border-radius: 16px; padding: 10px 4px; text-align: center; font-size: 11.5px; font-weight: 700; }
+.mini-badges svg { width: 40px; height: 40px; display: block; margin: 0 auto 6px; }
+
+/* ---------- Barra inferior ---------- */
+.sim-tabs {
+  position: absolute; inset: auto 0 0 0; height: 82px; padding: 8px 8px 18px; display: flex; z-index: 5;
+  background: var(--s-surface); border-top: 1px solid var(--s-line); transition: background-color .4s;
+}
+.sim-tabs button { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; color: var(--s-faint); font-size: 11.5px; font-weight: 700; }
+.sim-tabs .pillbg { width: 60px; height: 32px; border-radius: 99px; display: flex; align-items: center; justify-content: center; transition: background-color .3s; }
+.sim-tabs button.on { color: var(--coral); }
+.sim-tabs button.on .pillbg { background: color-mix(in srgb, var(--coral) 16%, transparent); }
+.sim[data-tabs="off"] .sim-tabs { display: none; }
+
+/* ---------- Foco y recorrido ---------- */
+.sim-spot {
+  position: absolute; z-index: 8; border-radius: 22px; pointer-events: none; opacity: 0;
+  box-shadow: 0 0 0 3px var(--spot, var(--coral)), 0 0 0 1600px rgba(20, 15, 10, 0.55);
+}
+.sim-tourcard {
+  position: absolute; left: 20px; right: 20px; z-index: 9; background: var(--s-surface); border-radius: 22px; padding: 18px; opacity: 0; pointer-events: none;
+}
+.sim-tourcard.is-on { pointer-events: auto; }
+.sim-tourcard .prog { height: 4px; border-radius: 9px; background: var(--s-surface2); margin: 14px 0; overflow: hidden; }
+.sim-tourcard .prog i { display: block; height: 100%; background: var(--coral); }
+.sim-tourcard .next { height: 40px; padding: 0 18px; border-radius: 12px; background: var(--coral); color: var(--on-coral); font-weight: 700; font-size: 14px; }
