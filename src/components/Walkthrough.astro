@@ -1,0 +1,191 @@
+---
+import { asset } from "../data/site";
+
+/*
+ * Recorrido con scroll: el teléfono (SVG) queda fijo y cambia de pantalla a medida que se avanza por los pasos.
+ * hl = zona que se resalta en la pantalla, en fracciones del ancho y del alto visibles [x, y, ancho, alto].
+ * Las animaciones están en src/scripts/walkthrough.ts (anime.js).
+ */
+const steps = [
+  {
+    img: "/img/tour/paso-01.png",
+    title: "Un recorrido para empezar",
+    text: "La primera vez que abres la app, la pantalla se oscurece y te explica cada sección, una por una. Puedes repetirlo cuando quieras con el botón «?».",
+    hl: [0.04, 0.36, 0.92, 0.21],
+    color: "#e05a47",
+  },
+  {
+    img: "/img/app/inicio-claro.png",
+    title: "Tu terapia de hoy",
+    text: "Inicio te dice cuánto te falta de la rutina del día, cuántos días llevas de racha y te da un consejo de ergonomía nuevo cada día.",
+    hl: [0.04, 0.095, 0.92, 0.18],
+    color: "#e05a47",
+  },
+  {
+    img: "/img/app/terapia-claro.png",
+    title: "Cinco ejercicios, una rutina",
+    text: "En Terapia están los cinco ejercicios. Toca uno para ver cómo se hace y para qué sirve, y empieza cuando estés listo.",
+    hl: [0.04, 0.585, 0.92, 0.325],
+    color: "#5fa8d3",
+  },
+  {
+    img: "/img/app/tutorial-pulgar-claro.png",
+    title: "Una guía animada",
+    text: "Antes de cada ejercicio, una mano animada te muestra las posturas en bucle y al ritmo real, para que sepas exactamente qué hacer.",
+    hl: [0.04, 0.23, 0.92, 0.5],
+    color: "#907cb8",
+  },
+  {
+    img: "/img/app/ejercicio-claro.png",
+    title: "La cámara te acompaña",
+    text: "Durante el ejercicio, la app marca el tiempo y las rondas. Con MediaPipe reconoce tu mano en tiempo real, sin grabar ni enviar imágenes.",
+    hl: [0.06, 0.3, 0.88, 0.44],
+    color: "#f4c443",
+  },
+  {
+    img: "/img/app/completada-claro.png",
+    title: "Cada sesión cuenta",
+    text: "Al terminar ves tus repeticiones, el tiempo de la sesión y cómo avanza tu racha.",
+    hl: [0.06, 0.32, 0.88, 0.32],
+    color: "#68b072",
+  },
+  {
+    img: "/img/app/rachas-claro.png",
+    title: "Rachas y logros",
+    text: "Un calendario con tus días activos y las rutinas completas, e insignias que ganas por constancia, repeticiones y sesiones.",
+    hl: [0.04, 0.19, 0.92, 0.45],
+    color: "#f4c443",
+  },
+  {
+    img: "/img/app/historial-claro.png",
+    title: "Historial y reporte en PDF",
+    text: "Tus sesiones con gráficas por día, mes y año. Desde aquí exportas un reporte clínico en PDF para tu fisioterapeuta o médico.",
+    hl: [0.04, 0.29, 0.92, 0.25],
+    color: "#907cb8",
+  },
+  {
+    img: "/img/app/perfil-claro.png",
+    title: "Tu perfil, a tu manera",
+    text: "Tu foto, tus logros destacados y los ajustes: tema claro u oscuro, recordatorios, tus datos y tu cuenta.",
+    hl: [0.04, 0.34, 0.92, 0.13],
+    color: "#e05a47",
+  },
+];
+
+// Medidas del teléfono en el SVG
+const W = 400, H = 888, PAD = 16;
+const SW = W - PAD * 2, SH = H - PAD * 2;
+---
+
+<section id="paso-a-paso" class="relative scroll-mt-16 bg-white/50 py-20">
+  <div class="mx-auto max-w-6xl px-4 sm:px-6">
+    <div data-reveal class="mx-auto max-w-2xl text-center">
+      <p class="font-display text-lg font-semibold text-coral">Paso a paso</p>
+      <h2 class="mt-2 font-display text-4xl font-semibold leading-tight sm:text-5xl">Así se usa Soltá Ve</h2>
+      <p class="mt-4 text-lg leading-relaxed text-arena">Desliza para recorrer las funciones más importantes de la app.</p>
+    </div>
+
+    <div class="mt-10 grid gap-6 md:mt-4 md:grid-cols-2 md:gap-16">
+      <!-- Teléfono fijo -->
+      <div class="sticky top-16 z-10 flex h-[46vh] flex-col items-center justify-center self-start bg-papel/95 pb-3 pt-2 backdrop-blur md:top-0 md:h-screen md:bg-transparent md:backdrop-blur-none">
+        <svg
+          id="wt-phone"
+          viewBox={`-10 -6 ${W + 20} ${H + 12}`}
+          class="h-full max-h-[80vh] w-auto overflow-visible drop-shadow-[0_30px_40px_rgba(35,28,21,0.25)]"
+          role="img"
+          aria-label="Teléfono con la app Soltá Ve mostrando la función que se explica"
+        >
+          <defs>
+            <clipPath id="wt-screen-clip">
+              <rect x={PAD} y={PAD} width={SW} height={SH} rx="50" />
+            </clipPath>
+            <!-- Foco: oscurece la pantalla salvo la zona que se explica, como el recorrido de la app -->
+            <mask id="wt-spot-mask">
+              <rect x={PAD} y={PAD} width={SW} height={SH} fill="white" />
+              <rect id="wt-hole" x={PAD + steps[0].hl[0] * SW} y={PAD + steps[0].hl[1] * SH} width={steps[0].hl[2] * SW} height={steps[0].hl[3] * SH} rx="20" fill="black" />
+            </mask>
+          </defs>
+
+          <g id="wt-phone-g">
+            <!-- Botones laterales -->
+            <rect x="-6" y="190" width="8" height="70" rx="4" fill="#3a3229" />
+            <rect x="-6" y="280" width="8" height="110" rx="4" fill="#3a3229" />
+            <rect x={W - 2} y="240" width="8" height="120" rx="4" fill="#3a3229" />
+            <!-- Cuerpo y contorno (el contorno se "dibuja" al entrar en pantalla) -->
+            <rect id="wt-body" x="0" y="0" width={W} height={H} rx="64" fill="#1b1712" />
+            <rect class="wt-outline" x="1.5" y="1.5" width={W - 3} height={H - 3} rx="62.5" fill="none" stroke="#e05a47" stroke-width="3" />
+
+            <!-- Pantallas: una por paso, apiladas -->
+            <g clip-path="url(#wt-screen-clip)">
+              <rect x={PAD} y={PAD} width={SW} height={SH} fill="#fbf7f0" />
+              {steps.map((s, i) => (
+                <image
+                  data-wt-img={i}
+                  href={asset(s.img)}
+                  x={PAD}
+                  y={PAD}
+                  width={SW}
+                  height={SH}
+                  preserveAspectRatio="xMidYMin slice"
+                  opacity={i === 0 ? 1 : 0}
+                />
+              ))}
+              <rect id="wt-spot" x={PAD} y={PAD} width={SW} height={SH} fill="#231c15" opacity="0" mask="url(#wt-spot-mask)" />
+            </g>
+
+            <!-- Isla superior -->
+            <rect x={W / 2 - 48} y="30" width="96" height="28" rx="14" fill="#0b0907" />
+
+            <!-- Marco que resalta la función del paso -->
+            <rect id="wt-hl" x={PAD + steps[0].hl[0] * SW} y={PAD + steps[0].hl[1] * SH} width={steps[0].hl[2] * SW} height={steps[0].hl[3] * SH} rx="20" fill="none" stroke={steps[0].color} stroke-width="6" />
+            <circle id="wt-ring" r="11" fill="none" stroke={steps[0].color} stroke-width="3" />
+            <circle id="wt-dot" r="7" fill={steps[0].color} />
+          </g>
+        </svg>
+
+        <!-- Progreso -->
+        <div class="mt-3 flex items-center gap-3">
+          <span id="wt-count" class="w-24 text-right font-display text-sm font-semibold text-arena">Paso 1 de {steps.length}</span>
+          <div class="flex gap-1.5">
+            {steps.map((_, i) => (
+              <button type="button" data-wt-dot={i} aria-label={`Ir al paso ${i + 1}`} class="h-2 w-2 rounded-full bg-linea transition-colors"></button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <!-- Pasos. En celular cada tarjeta va al fondo de su paso, debajo del teléfono fijo. -->
+      <ol class="relative">
+        {steps.map((s, i) => (
+          <li data-wt-step={i} data-hl={s.hl.join(",")} data-color={s.color} class="flex min-h-[75vh] items-end pb-4 md:min-h-[85vh] md:items-center md:pb-0">
+            <article data-wt-card class="w-full rounded-3xl bg-white p-5 shadow-sm ring-1 ring-linea transition-opacity duration-500 md:p-7">
+              <span class="inline-flex h-9 w-9 items-center justify-center rounded-full font-display text-lg font-semibold text-white md:h-10 md:w-10" style={`background:${s.color}`}>{i + 1}</span>
+              <h3 class="mt-3 font-display text-xl font-semibold sm:text-3xl md:mt-4">{s.title}</h3>
+              <p class="mt-2 text-base leading-relaxed text-arena sm:text-lg md:mt-3">{s.text}</p>
+            </article>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </div>
+</section>
+
+<style>
+  #wt-phone-g {
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+  #wt-ring,
+  #wt-dot {
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+  [data-wt-dot][aria-current="step"] {
+    width: 1.25rem;
+    background: var(--color-coral);
+  }
+</style>
+
+<script>
+  import "../scripts/walkthrough";
+</script>

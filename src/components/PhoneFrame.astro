@@ -1,16 +1,22 @@
 ---
 import { asset } from "../data/site";
 
-/** Captura de la app dentro de un marco de teléfono. */
+/**
+ * Captura de la app dentro de un marco de teléfono.
+ * Cada captura conserva su alto real ([h], en píxeles de la imagen de 824 de ancho) para que no se corte la barra
+ * inferior. Las pantallas que se desplazan (rachas, historial) se recortan a la altura de un teléfono con [crop].
+ */
 interface Props {
   src: string;
   alt: string;
+  h?: number;
+  crop?: boolean;
   class?: string;
   eager?: boolean;
   [key: string]: unknown;
 }
 
-const { src, alt, class: className = "", eager = false, ...rest } = Astro.props;
+const { src, alt, h = 1834, crop = false, class: className = "", eager = false, ...rest } = Astro.props;
 ---
 
 <div
@@ -21,9 +27,9 @@ const { src, alt, class: className = "", eager = false, ...rest } = Astro.props;
     src={asset(src)}
     alt={alt}
     width="824"
-    height="1834"
+    height={crop ? 1916 : h}
     loading={eager ? "eager" : "lazy"}
     decoding="async"
-    class="block aspect-[824/1834] h-auto w-full object-cover object-top"
+    class={`block w-full rounded-[1.85rem] ${crop ? "aspect-[824/1916] object-cover object-top" : "h-auto"}`}
   />
 </div>
