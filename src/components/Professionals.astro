@@ -1,0 +1,79 @@
+---
+import { asset } from "../data/site";
+
+// Cómo el paciente comparte su progreso con su fisioterapeuta o médico (app + programa Soltá Ve Profesionales).
+const steps = [
+  { n: "1", title: "El paciente genera un código", text: "En la app, en Ajustes → Compartir con mi profesional, toca «Generar código». Son 6 caracteres, valen 48 horas y sirven una sola vez.", color: "text-coral" },
+  { n: "2", title: "El profesional lo escribe en su PC", text: "En el programa Soltá Ve Profesionales elige «Agregar paciente» y escribe el código. Desde ese momento ve a ese paciente en su lista.", color: "text-ambar" },
+  { n: "3", title: "Sigue su terapia de cerca", text: "Ve los ejercicios, la constancia, la evolución del dolor y las señales de alerta del chequeo del día, y exporta un reporte clínico en PDF.", color: "text-verde" },
+];
+
+const features = [
+  { title: "Solo lectura", text: "El profesional puede ver los datos, nunca cambiarlos." },
+  { title: "El paciente decide", text: "Desde la app ve quién tiene acceso y puede quitarlo cuando quiera." },
+  { title: "Cuentas aprobadas", text: "Cada profesional se registra con su profesión y su registro, y un administrador aprueba la cuenta." },
+  { title: "Revisión punto a punto", text: "Al elegir un día o un ejercicio, la mano animada muestra lo que hizo el paciente." },
+];
+---
+
+<section id="profesionales" class="scroll-mt-20 bg-white py-20">
+  <div class="mx-auto max-w-6xl px-4 sm:px-6">
+    <div data-reveal class="max-w-2xl">
+      <p class="font-display text-lg font-semibold text-coral">Para profesionales de la salud</p>
+      <h2 class="mt-2 font-display text-4xl font-semibold leading-tight sm:text-5xl">Tu fisioterapeuta, al tanto de tu progreso</h2>
+      <p class="mt-4 text-lg leading-relaxed text-arena">
+        Con el programa para computador <b>Soltá Ve Profesionales</b>, el fisioterapeuta o el médico que acompaña la rehabilitación
+        sigue el avance de cada paciente sin depender de que le muestre su teléfono. El paciente es quien da el permiso, con un código.
+      </p>
+    </div>
+
+    <div class="mt-12 grid items-center gap-10 md:grid-cols-[0.9fr_1.1fr] md:gap-12">
+      <ol data-stagger class="space-y-6 md:space-y-8">
+        {steps.map((s) => (
+          <li class="flex gap-4 md:gap-5">
+            <span class={`font-display text-4xl font-bold leading-none md:text-5xl ${s.color}`}>{s.n}</span>
+            <div>
+              <h3 class="font-display text-xl font-semibold md:text-2xl">{s.title}</h3>
+              <p class="mt-2 leading-relaxed text-arena">{s.text}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+
+      <!-- Teléfono con el código y, detrás, el programa de PC donde se escribe -->
+      <div data-reveal class="relative min-w-0 pb-10 sm:pb-0">
+        <img
+          src={asset("/img/pc/agregar-paciente.jpg")}
+          alt="Programa Soltá Ve Profesionales: ventana para agregar un paciente escribiendo su código"
+          width="1320" height="860" loading="lazy"
+          class="w-full rounded-2xl shadow-xl ring-1 ring-linea"
+        />
+        <img
+          src={asset("/img/pc/app-codigo.jpg")}
+          alt="App Soltá Ve: ventana Compartir con mi profesional con el código generado"
+          width="412" height="917" loading="lazy"
+          class="absolute -bottom-2 right-3 w-[30%] max-w-[10rem] rounded-[1.4rem] border-4 border-tinta shadow-2xl sm:-bottom-8 sm:-right-4"
+        />
+      </div>
+    </div>
+
+    <div data-stagger class="mt-16 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {features.map((f) => (
+        <article data-card class="rounded-2xl bg-papel p-5 ring-1 ring-linea">
+          <h3 class="font-display text-lg font-semibold">{f.title}</h3>
+          <p class="mt-2 text-sm leading-relaxed text-arena">{f.text}</p>
+        </article>
+      ))}
+    </div>
+
+    <figure data-reveal class="mt-12">
+      <img
+        src={asset("/img/pc/detalle-paciente.jpg")}
+        alt="Detalle de un paciente en el programa: resumen de la terapia, actividad de los últimos 30 días y ejercicios realizados"
+        width="1320" height="860" loading="lazy"
+        class="w-full rounded-2xl shadow-lg ring-1 ring-linea"
+      />
+      <figcaption class="mt-3 text-center text-sm text-arena">Detalle de un paciente en Soltá Ve Profesionales (datos de prueba).</figcaption>
+    </figure>
+  </div>
+</section>
