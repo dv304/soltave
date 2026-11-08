@@ -3,7 +3,6 @@ import { asset, release } from "../data/site";
 
 const downloads = [
   { title: "Soltá Ve Profesionales", text: "Instalador para Windows 10 y 11.", size: "98 MB", href: release("SoltaVe-Profesionales-Instalador.exe"), color: "bg-coral" },
-  { title: "Versión portátil", text: "Para Windows, se abre sin instalar.", size: "90 MB", href: release("SoltaVe-Profesionales-Portable.exe"), color: "bg-violeta" },
   { title: "App Soltá Ve para Android", text: "Archivo de instalación (APK), Android 8 o superior.", size: "33 MB", href: release("SoltaVe-Android.apk"), color: "bg-verde" },
 ];
 
@@ -89,7 +88,7 @@ const features = [
       <p class="mt-3 max-w-3xl leading-relaxed text-[#d9cfc2]">
         Descarga Soltá Ve Profesionales para Windows y la app Soltá Ve para Android. Son versiones de prueba del proyecto, gratuitas.
       </p>
-      <div data-stagger class="mt-8 grid gap-4 md:grid-cols-3">
+      <div data-stagger class="mt-8 grid gap-4 md:grid-cols-2">
         {downloads.map((d) => (
           <a href={d.href} download class="group flex flex-col rounded-2xl bg-[#2b241c] p-5 ring-1 ring-[#4a4035] transition hover:-translate-y-0.5 hover:ring-coral" data-card>
             <span class={`flex h-11 w-11 items-center justify-center rounded-xl ${d.color}`}>
